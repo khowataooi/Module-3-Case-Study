@@ -9,17 +9,23 @@ public class User {
     private String password;
     private String avatarUrl;
     private Date createdAt;
-    private static int idIncrement = 1;
 
 
-    public User(String email, String username, String password, String avatarUrl, Date createdAt) {
-        this.id = idIncrement;
+    public User(int id, String email, String username, String password, String avatarUrl, Date createdAt) {
+        this.id = id;
         this.email = email;
         this.username = username;
         this.password = password;
         this.avatarUrl = avatarUrl;
         this.createdAt = createdAt;
-        idIncrement++;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getEmail() {
@@ -62,11 +68,4 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    public static int getIdIncrement() {
-        return idIncrement;
-    }
-
-    public static void setIdIncrement(int idIncrement) {
-        User.idIncrement = idIncrement;
-    }
 }
