@@ -1,5 +1,6 @@
 package app.model;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class User {
@@ -8,10 +9,10 @@ public class User {
     private String username;
     private String password;
     private String avatarUrl;
-    private Date createdAt;
+    private LocalDate createdAt;
 
 
-    public User(int id, String email, String username, String password, String avatarUrl, Date createdAt) {
+    public User(int id, String email, String username, String password, String avatarUrl, LocalDate createdAt) {
         this.id = id;
         this.email = email;
         this.username = username;
@@ -60,12 +61,11 @@ public class User {
         this.avatarUrl = avatarUrl;
     }
 
-    public Date getCreatedAt() {
+    public LocalDate getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
-
 }
