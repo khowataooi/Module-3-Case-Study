@@ -1,6 +1,4 @@
 package app.model;
 
-
-public class User {
-
+public class Post {
 }
