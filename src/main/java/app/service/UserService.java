@@ -4,6 +4,7 @@ import app.model.User;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,14 +13,15 @@ public class UserService implements IService<User> {
 
     @Override
     public boolean add(User user) {
-        String sql = "insert into appfakebook.user (email, username, password, avatar_url, created_at) VALUES\n + (?, ?, ?, ?, ?);";
+        String sql = "insert into appfakebook.user (email, username, password, avatar_url, created_at) VALUES\n + (?," +
+                " ?, ?, ?, ?);";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, user.getEmail());
             preparedStatement.setString(2, user.getUsername());
             preparedStatement.setString(3, user.getPassword());
             preparedStatement.setString(4, user.getAvatarUrl());
-            preparedStatement.setDate(5, Date.valueOf(user.getCreatedAt()));
+            preparedStatement.setTimestamp(5, Timestamp.valueOf(user.getCreatedAt()));
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -29,14 +31,15 @@ public class UserService implements IService<User> {
 
     @Override
     public boolean edit(User user, int id) {
-        String sql = "update appfakebook.user set email = ?, username = ?, password = ?, avatar_url = ?, created_at = ? where id = ?;";
+        String sql = "update appfakebook.user set email = ?, username = ?, password = ?, avatar_url = ?, created_at =" +
+                " ? where id = ?;";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, user.getEmail());
             preparedStatement.setString(2, user.getUsername());
             preparedStatement.setString(3, user.getPassword());
             preparedStatement.setString(4, user.getAvatarUrl());
-            preparedStatement.setDate(5, Date.valueOf(user.getCreatedAt()));
+            preparedStatement.setTimestamp(5, Timestamp.valueOf(user.getCreatedAt()));
             preparedStatement.setInt(6, id);
             preparedStatement.executeUpdate();
             return true;
@@ -67,20 +70,16 @@ public class UserService implements IService<User> {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                String email = resultSet.getString("email");
-                String username = resultSet.getString("username");
-                String password = resultSet.getString("password");
-                String avatar_url = resultSet.getString("avatar_url");
-                LocalDate created_at = resultSet.getDate("created_at").toLocalDate();
-                User user = new User(id, email, username, password, avatar_url, created_at);
-                return user;
-            }
+            String email = resultSet.getString("email");
+            String username = resultSet.getString("username");
+            String password = resultSet.getString("password");
+            String avatar_url = resultSet.getString("avatar_url");
+            LocalDateTime created_at = resultSet.getTimestamp("created_at").toLocalDateTime();
+            return new User(id, email, username, password, avatar_url, created_at);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
-        return null;
     }
 
 
@@ -93,11 +92,11 @@ public class UserService implements IService<User> {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
-                String email = String.valueOf(resultSet.getInt("email"));
-                String username = String.valueOf(resultSet.getInt("username"));
-                String password = String.valueOf(resultSet.getInt("password"));
-                String avatar_url = String.valueOf(resultSet.getInt("avatar_url"));
-                LocalDate created_at = LocalDate.ofEpochDay(resultSet.getInt("created_at"));
+                String email = String.valueOf(resultSet.getString("email"));
+                String username = String.valueOf(resultSet.getString("username"));
+                String password = String.valueOf(resultSet.getString("password"));
+                String avatar_url = String.valueOf(resultSet.getString("avatar_url"));
+                LocalDateTime created_at = resultSet.getTimestamp("created_at").toLocalDateTime();
                 User user = new User(id, email, username, password, avatar_url, created_at);
                 users.add(user);
             }
@@ -107,4 +106,13 @@ public class UserService implements IService<User> {
         return users;
     }
 
+    public boolean checkUser(String username, String password) {
+        List<User> users = findAll();
+        for (User user : users) {
+            if (username.equals(user.getUsername()) && password.equals(user.getPassword()) ) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

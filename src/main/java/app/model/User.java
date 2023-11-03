@@ -1,7 +1,7 @@
 package app.model;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class User {
     private int id;
@@ -9,10 +9,10 @@ public class User {
     private String username;
     private String password;
     private String avatarUrl;
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
 
-    public User(int id, String email, String username, String password, String avatarUrl, LocalDate createdAt) {
+    public User(int id, String email, String username, String password, String avatarUrl, LocalDateTime createdAt) {
         this.id = id;
         this.email = email;
         this.username = username;
@@ -61,11 +61,11 @@ public class User {
         this.avatarUrl = avatarUrl;
     }
 
-    public LocalDate getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 }
