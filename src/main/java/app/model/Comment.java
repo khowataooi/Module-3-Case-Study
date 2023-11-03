@@ -1,21 +1,21 @@
 package app.model;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class Comment {
     private int id;
     private int authorId;
     private int postId;
-    private String context;
-    private LocalDate createdAt;
-    private LocalDate updatedAt;
+    private String content;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    public Comment(int id, int authorId, int postId, String context, LocalDate createdAt, LocalDate updatedAt) {
+    public Comment(int id, int authorId, int postId, String content, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.authorId = authorId;
         this.postId = postId;
-        this.context = context;
+        this.content = content;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -44,27 +44,27 @@ public class Comment {
         this.postId = postId;
     }
 
-    public String getContext() {
-        return context;
+    public String getContent() {
+        return content;
     }
 
-    public void setContext(String context) {
-        this.context = context;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public LocalDate getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDate getUpdatedAt() {
-        return updatedAt;
+    public String getUpdatedAt() {
+        return String.valueOf(updatedAt);
     }
 
-    public void setUpdatedAt(LocalDate updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

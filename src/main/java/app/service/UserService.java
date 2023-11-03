@@ -51,7 +51,7 @@ public class UserService implements IService<User> {
 
     @Override
     public boolean delete(int id) {
-        String sql = "select * from appfakebook.user where id = ?;";
+        String sql = "delete from appfakebook.user where id = ?;";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
