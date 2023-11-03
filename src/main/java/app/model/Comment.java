@@ -1,4 +1,70 @@
 package app.model;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 public class Comment {
+    private int id;
+    private int authorId;
+    private int postId;
+    private String context;
+    private LocalDate createdAt;
+    private LocalDate updatedAt;
+
+    public Comment(int id, int authorId, int postId, String context, LocalDate createdAt, LocalDate updatedAt) {
+        this.id = id;
+        this.authorId = authorId;
+        this.postId = postId;
+        this.context = context;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
+    }
+
+    public int getPostId() {
+        return postId;
+    }
+
+    public void setPostId(int postId) {
+        this.postId = postId;
+    }
+
+    public String getContext() {
+        return context;
+    }
+
+    public void setContext(String context) {
+        this.context = context;
+    }
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDate getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDate updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }
