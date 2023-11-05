@@ -13,15 +13,17 @@ public class UserService implements IService<User> {
 
     @Override
     public boolean add(User user) {
-        String sql = "insert into appfakebook.user (email, username, password, avatar_url, created_at) VALUES\n + (?," +
-                " ?, ?, ?, ?);";
+        String sql = "insert into appfakebook.user (email, username, password, avatar_url,gender,date_of_birth, created_at) VALUES\n + (?," +
+                " ?, ?, ?, ?, ?, ?);";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, user.getEmail());
             preparedStatement.setString(2, user.getUsername());
             preparedStatement.setString(3, user.getPassword());
             preparedStatement.setString(4, user.getAvatarUrl());
-            preparedStatement.setTimestamp(5, Timestamp.valueOf(user.getCreatedAt()));
+            preparedStatement.setString(5,user.getGender());
+            preparedStatement.setDate(6, Date.valueOf(user.getDateOfBirth()));
+            preparedStatement.setTimestamp(7, Timestamp.valueOf(user.getCreatedAt()));
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -31,7 +33,7 @@ public class UserService implements IService<User> {
 
     @Override
     public boolean edit(User user, int id) {
-        String sql = "update appfakebook.user set email = ?, username = ?, password = ?, avatar_url = ?, created_at =" +
+        String sql = "update appfakebook.user set email = ?, username = ?, password = ?, avatar_url = ?,gender = ?, date_of_birth = ?, created_at =" +
                 " ? where id = ?;";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -39,8 +41,10 @@ public class UserService implements IService<User> {
             preparedStatement.setString(2, user.getUsername());
             preparedStatement.setString(3, user.getPassword());
             preparedStatement.setString(4, user.getAvatarUrl());
-            preparedStatement.setTimestamp(5, Timestamp.valueOf(user.getCreatedAt()));
-            preparedStatement.setInt(6, id);
+            preparedStatement.setString(5,user.getGender());
+            preparedStatement.setDate(6, Date.valueOf(user.getDateOfBirth()));
+            preparedStatement.setTimestamp(7, Timestamp.valueOf(user.getCreatedAt()));
+            preparedStatement.setInt(8, id);
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -74,8 +78,10 @@ public class UserService implements IService<User> {
             String username = resultSet.getString("username");
             String password = resultSet.getString("password");
             String avatar_url = resultSet.getString("avatar_url");
+            String gender = resultSet.getString("gender");
+            LocalDate date_of_birth = resultSet.getDate("date_of_birth").toLocalDate();
             LocalDateTime created_at = resultSet.getTimestamp("created_at").toLocalDateTime();
-            return new User(id, email, username, password, avatar_url, created_at);
+            return new User(id, email, username, password, avatar_url, gender, date_of_birth, created_at);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -96,8 +102,10 @@ public class UserService implements IService<User> {
                 String username = String.valueOf(resultSet.getString("username"));
                 String password = String.valueOf(resultSet.getString("password"));
                 String avatar_url = String.valueOf(resultSet.getString("avatar_url"));
+                String gender = String.valueOf(resultSet.getString("gender"));
+                LocalDate date_of_birth = resultSet.getDate("day_of_birth").toLocalDate();
                 LocalDateTime created_at = resultSet.getTimestamp("created_at").toLocalDateTime();
-                User user = new User(id, email, username, password, avatar_url, created_at);
+                User user = new User(id, email, username, password, avatar_url, gender,date_of_birth, created_at);
                 users.add(user);
             }
         } catch (SQLException e) {

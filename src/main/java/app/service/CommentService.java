@@ -14,20 +14,20 @@ public class CommentService implements IService<Comment> {
 
     @Override
     public boolean add(Comment comment) {
-        String sql = "INSERT INTO appfakebook.comment(author_id, post_id, content, created_at, updated_at)\n" +
-                "VALUES (?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO appfakebook.comment(author_id, post_id, content, created_at)\n" +
+                "VALUES (?, ?, ?, ?);";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, comment.getAuthorId());
             preparedStatement.setInt(2, comment.getPostId());
             preparedStatement.setString(3, comment.getContent());
             preparedStatement.setTimestamp(4, Timestamp.valueOf(comment.getCreatedAt()));
-            preparedStatement.setTimestamp(5, Timestamp.valueOf(comment.getUpdatedAt()));
             preparedStatement.executeUpdate();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
     @Override

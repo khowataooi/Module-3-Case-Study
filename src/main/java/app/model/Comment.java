@@ -19,6 +19,12 @@ public class Comment {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
+    public Comment(int authorId, int postId, String content, LocalDateTime createdAt) {
+        this.authorId = authorId;
+        this.postId = postId;
+        this.content = content;
+        this.createdAt = createdAt;
+    }
 
     public int getId() {
         return id;
