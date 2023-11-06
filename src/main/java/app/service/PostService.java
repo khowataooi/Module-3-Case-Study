@@ -1,5 +1,6 @@
 package app.service;
 
+import app.model.Comment;
 import app.model.Post;
 import app.model.User;
 
@@ -32,7 +33,7 @@ public class PostService implements IService<Post> {
 
     @Override
     public boolean edit(Post post, int id) {
-        String sql = "update  appfakebook.post set author_id = ?,content = ?, img_url = ?, created_at = ?, updated_at = ?"
+        String sql = "update appfakebook.post set author_id = ?,content = ?, img_url = ?, created_at = ?, updated_at = ?"
                 + "where id = ?;";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -62,17 +63,12 @@ public class PostService implements IService<Post> {
 
     @Override
     public Post findById(int id) {
-        String sql = "select * from appfakebook.post where id = ? ;";
+        String sql = "select p.*, c.* from appfakebook.post as p inner join appfakebook.comment as c on p.id = c.post_id where p.id = ? ;";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
-            int author_id = resultSet.getInt("author_id");
-            String content = resultSet.getString("content");
-            String img_url = resultSet.getString("img_url");
-            LocalDateTime created_at = resultSet.getTimestamp("created_at").toLocalDateTime();
-            LocalDateTime updated_at = resultSet.getTimestamp("updated_at").toLocalDateTime();
-            return new Post(author_id, content, img_url, created_at, updated_at);
+            return parsePost(resultSet);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -82,24 +78,49 @@ public class PostService implements IService<Post> {
     @Override
     public List<Post> findAll() {
         List<Post> posts = new ArrayList<>();
-        String sql = "select * from appfakebook.post;";
+        String sql = "select p.*, c.* from appfakebook.post as p inner join appfakebook.comment as c on p.id = c.post_id;";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                int author_id = resultSet.getInt("author_id");
-                String content = resultSet.getString("content");
-                String img_url = resultSet.getString("img_url");
-                LocalDateTime created_at = resultSet.getTimestamp("created_at").toLocalDateTime();
-                LocalDateTime updated_at = resultSet.getTimestamp("updated_at").toLocalDateTime();
-                Post post = new Post(id, author_id, content, img_url, created_at, updated_at);
+                Post post = parsePost(resultSet);
                 posts.add(post);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return posts;
     }
 
+    private Post parsePost(ResultSet resultSet) throws SQLException {
+        Post post = new Post();
+        List<Comment> comments = new ArrayList<>();
+        while (resultSet.next()) {
+            // Thong tin Post
+            int postId = resultSet.getInt("p.id");
+            int authorId = resultSet.getInt("p.author_id");
+            String content = resultSet.getString("p.content");
+            String imgUrl = resultSet.getString("img_url");
+//            LocalDateTime createdAt = resultSet.getTimestamp("p.created_at").toLocalDateTime();
+            LocalDateTime updatedAt = resultSet.getTimestamp("p.updated_at").toLocalDateTime();
+            post.setId(postId);
+            post.setAuthorId(authorId);
+            post.setContent(content);
+            post.setImageUrl(imgUrl);
+            post.setCreatedAt(null);
+            post.setUpdatedAt(updatedAt);
+
+            // Thong tin danh sach Comment trong Post do
+            int commentId = resultSet.getInt("c.id");
+            int commentPostId = resultSet.getInt("post_id");
+            int commentAuthorId = resultSet.getInt("c.author_id");
+            String commentContent = resultSet.getString("c.content");
+//            LocalDateTime commentCreatedAt = resultSet.getTimestamp("c.created_at").toLocalDateTime();
+            LocalDateTime commentUpdatedAt = resultSet.getTimestamp("c.updated_at").toLocalDateTime();
+            Comment comment = new Comment(commentId, commentAuthorId, commentPostId, commentContent, null, commentUpdatedAt);
+            comments.add(comment);
+        }
+        post.setComments(comments);
+        return post;
+    }
 }
